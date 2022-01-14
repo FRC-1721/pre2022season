@@ -21,6 +21,5 @@ class UnnamedToaster(wpilib.TimedRobot):
     def teleopPeriodic(self):
        self.driveTrain.arcadeDrive(self.joy.getRawAxis(1), -self.joy.getRawAxis(2))
 
-
 if __name__ == "__main__":
     wpilib.run(UnnamedToaster)

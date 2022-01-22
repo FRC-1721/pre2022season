@@ -1,0 +1,28 @@
+name: PyFRC Tests
+on:
+  push:
+    paths:
+      - 'src/**'
+    tags:
+  release:
+
+jobs:
+  make_docs:
+    runs-on: ubuntu-latest
+    name: Excecute PyFRC Tests
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - run: sudo apt update
+
+    - run: sudo apt install python3 pipenv
+
+    - run: cd src && pipenv install
+
+    - run: cd src && pipenv run python robot.py test

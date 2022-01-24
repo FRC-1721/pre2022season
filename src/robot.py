@@ -3,11 +3,13 @@ import wpilib.drive
 import rev
 import math
 
-#TEMP FUNCTION MOVE TO ANOTHER FILE
-#this function takes in the verticle and horizontal vectors of the joystick 
-#and creates angleS and angleL. AngleS is the vector of the joystick when the
-#verticle vector is greater than 0, and AngleL is the vector of the joystick when
-#the verticle vector is less than 0. 
+# TEMP FUNCTION MOVE TO ANOTHER FILE
+# this function takes in the verticle and horizontal vectors of the joystick
+# and creates angleS and angleL. AngleS is the vector of the joystick when the
+# verticle vector is greater than 0, and AngleL is the vector of the joystick when
+# the verticle vector is less than 0.
+
+
 def vectorMath(vector1, vector2, SorL):
     vector1Circle = vector1 * math.sqrt(1 - 0.5*vector2**2)
     vector2Circle = vector2 * math.sqrt(1 - 0.5*vector1**2)
@@ -20,6 +22,7 @@ def vectorMath(vector1, vector2, SorL):
     #elif (SorL == 1):
     #    return angleL
     return angleS
+
 
 class UnnamedToaster(wpilib.TimedRobot):
     def robotInit(self):
@@ -52,6 +55,7 @@ class UnnamedToaster(wpilib.TimedRobot):
         #self.drivePID.setSmartMotionMaxVelocity(0.3)
 
     def teleopPeriodic(self):
+<<<<<<< HEAD
         #methods of spinning
         #self.spinMotor.set(self.joy.getRawAxis(2)/20)
         #self.spinPID.setReference(self.joy.getRawAxis(2)*5, rev.ControlType.kPosition, 0)   
@@ -59,6 +63,11 @@ class UnnamedToaster(wpilib.TimedRobot):
             self.spinMotor.set(0.001)
         if (self.joy.getRawButton(6) == True):
             self.spinMotor.set(-0.2)
+=======
+        # methods of spinning
+        self.spinMotor.set(self.joy.getRawAxis(2)/10)
+        #self.spinPID.setReference(self.joy.getRawAxis(2)*5, rev.ControlType.kPosition, 0)
+>>>>>>> d8e3774d899d3be1b5b25d22b2843305542d705b
 
         if (self.joy.getRawButton(3) == True):
             self.spinMotor.set(0.1)
@@ -68,6 +77,7 @@ class UnnamedToaster(wpilib.TimedRobot):
         if (self.joy.getRawButton(1) == True):
             self.spinMotor.set(0)
 
+<<<<<<< HEAD
         #self.driveMotor.set(self.joy.getRawAxis(1)/4)
 
         #Neo spins to wheel spins ratio: ~36.5:1
@@ -75,9 +85,19 @@ class UnnamedToaster(wpilib.TimedRobot):
             self.joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),0)
         elif (self.joy.getRawAxis(1) > 0):
             self.joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),1)
+=======
+        # Neo spins to wheel spins ratio: ~11:1
+        if (self.joy.getRawAxis(1) < 0):
+            joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),
+                                        self.joy.getRawAxis(0), 0)
+        elif (self.joy.getRawAxis(1) > 0):
+            joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),
+                                        self.joy.getRawAxis(0), 1)
+>>>>>>> d8e3774d899d3be1b5b25d22b2843305542d705b
         else:
             self.joyVectorAngle = 0
 
+<<<<<<< HEAD
         if (self.joy.getRawAxis(0) < 0):
             self.joyVectorAngle = 360-self.joyVectorAngle
         
@@ -86,10 +106,19 @@ class UnnamedToaster(wpilib.TimedRobot):
         self.currentPosition = (self.spinEncoder.getPosition() % 11) / 11
         self.movePercent = self.joyPercent - self.currentPosition
         self.neoTurns = self.movePercent * self.neoTurnRatio
+=======
+        self.neoTurnPercent = 1/11
+        self.turnPercent = joyVectorAngle / 360
+        self.neoTurns = joyVectorAngle / self.neoTurnPercent
+        print(self.neoTurnPercent, " - neoTurn", self.turnPercent,
+              " - turnPercent", self.neoTurns, " - neoTurns")
+        #self.spinPID.setReference(self.neoTurns, rev.ControlType.kPosition, 0)
+>>>>>>> d8e3774d899d3be1b5b25d22b2843305542d705b
 
         #self.spinPID.setReference(self.spinEncoder.getPosition()+self.neoTurns, rev.ControlType.kPosition, 0)
 
         print(self.spinEncoder.getPosition())
+
 
 if __name__ == "__main__":
     wpilib.run(UnnamedToaster)

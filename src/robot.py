@@ -9,13 +9,17 @@ import math
 #verticle vector is greater than 0, and AngleL is the vector of the joystick when
 #the verticle vector is less than 0. 
 def vectorMath(vector1, vector2, SorL):
-    vector3 = math.sqrt(vector1**2 + vector2**2)
-    angleS = math.degrees(math.cos(vector1/vector3))
-    angleL = 108 - angleS
-    if (SorL == 0):
-        return angleS
-    elif (SorL == 1):
-        return angleL
+    vector1Circle = vector1 * math.sqrt(1 - 0.5*vector2**2)
+    vector2Circle = vector2 * math.sqrt(1 - 0.5*vector1**2)
+    vector3 = math.sqrt(vector1Circle**2 + vector2Circle**2)
+    angleS = math.degrees(math.acos(vector1Circle/vector3))
+    angleL = 180 - angleS
+    print(angleS, " S ", angleL, " L ", vector1, " Vector1 ", vector2, " Vector2 ", vector3, " Vector3 ", vector1Circle, " V1C ", vector2Circle, " V2C ")
+    #if (SorL == 0):
+    #    return angleS
+    #elif (SorL == 1):
+    #    return angleL
+    return angleS
 
 class UnnamedToaster(wpilib.TimedRobot):
     def robotInit(self):
@@ -32,7 +36,7 @@ class UnnamedToaster(wpilib.TimedRobot):
         self.joy = wpilib.Joystick(0)
 
     def teleopInit(self):
-        self.spinEncoder.setPosition(1)
+        self.spinEncoder.setPosition(0)
         self.driveEncoder.setPosition(0)
 
         self.spinPID.setP(0.1)
@@ -49,26 +53,27 @@ class UnnamedToaster(wpilib.TimedRobot):
 
     def teleopPeriodic(self):
         #methods of spinning
-        self.spinMotor.set(self.joy.getRawAxis(2)/10)
+        #self.spinMotor.set(self.joy.getRawAxis(2)/10)
         #self.spinPID.setReference(self.joy.getRawAxis(2)*5, rev.ControlType.kPosition, 0)   
 
-        self.driveMotor.set(self.joy.getRawAxis(1)/4)
+        #self.driveMotor.set(self.joy.getRawAxis(1)/4)
 
         #Neo spins to wheel spins ratio: ~11:1
         if (self.joy.getRawAxis(1) < 0):
-            joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),0)
+            self.joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),0)
         elif (self.joy.getRawAxis(1) > 0):
-            joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),1)
+            self.joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),1)
         else:
-            joyVectorAngle = 0
+            self.joyVectorAngle = 0
 
-        self.neoTurnPercent = 1/11
-        self.turnPercent = joyVectorAngle / 360
-        self.neoTurns = joyVectorAngle / self.neoTurnPercent
-        print(self.neoTurnPercent, " - neoTurn", self.turnPercent, " - turnPercent", self.neoTurns, " - neoTurns")
-        #self.spinPID.setReference(self.neoTurns, rev.ControlType.kPosition, 0)
+        if (self.joy.getRawAxis(0) < 0):
+            self.joyVectorAngle = 360-self.joyVectorAngle
+        
+        self.neoTurnRatio = 1/11
+        self.joyPercent = self.joyVectorAngle / 360
+        self.currentPosition = (self.spinEncoder.getPosition() % 11) / 11
 
-        #print(f"Encoder Drive: {self.driveEncoder.getPosition()}, Encoder Spin: {self.spinEncoder.getPosition()}")
+        print(self.neoTurnRatio,  self.joyPercent, self.currentPosition)
 
 if __name__ == "__main__":
     wpilib.run(UnnamedToaster)

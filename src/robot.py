@@ -39,7 +39,7 @@ class UnnamedToaster(wpilib.TimedRobot):
         self.spinEncoder.setPosition(0)
         #self.driveEncoder.setPosition(0)
 
-        self.spinPID.setP(0.1)
+        self.spinPID.setP(0.02)
         self.spinPID.setD(0.5)
         self.spinPID.setFF(0)
         self.spinPID.setI(1e-4)
@@ -56,7 +56,7 @@ class UnnamedToaster(wpilib.TimedRobot):
         #self.spinMotor.set(self.joy.getRawAxis(2)/20)
         #self.spinPID.setReference(self.joy.getRawAxis(2)*5, rev.ControlType.kPosition, 0)   
         if (self.joy.getRawButton(5) == True):
-            self.spinMotor.set(0.2)
+            self.spinMotor.set(0.001)
         if (self.joy.getRawButton(6) == True):
             self.spinMotor.set(-0.2)
 
@@ -70,7 +70,7 @@ class UnnamedToaster(wpilib.TimedRobot):
 
         #self.driveMotor.set(self.joy.getRawAxis(1)/4)
 
-        #Neo spins to wheel spins ratio: ~36.75:1
+        #Neo spins to wheel spins ratio: ~36.5:1
         if (self.joy.getRawAxis(1) < 0):
             self.joyVectorAngle = vectorMath(-self.joy.getRawAxis(1),self.joy.getRawAxis(0),0)
         elif (self.joy.getRawAxis(1) > 0):
@@ -81,11 +81,15 @@ class UnnamedToaster(wpilib.TimedRobot):
         if (self.joy.getRawAxis(0) < 0):
             self.joyVectorAngle = 360-self.joyVectorAngle
         
-        self.neoTurnRatio = 1/36.75
+        self.neoTurnRatio = 36.5
         self.joyPercent = self.joyVectorAngle / 360
         self.currentPosition = (self.spinEncoder.getPosition() % 11) / 11
+        self.movePercent = self.joyPercent - self.currentPosition
+        self.neoTurns = self.movePercent * self.neoTurnRatio
 
-        print(self.neoTurnRatio, self.joyVectorAngle,  self.joyPercent, self.currentPosition)
+        #self.spinPID.setReference(self.spinEncoder.getPosition()+self.neoTurns, rev.ControlType.kPosition, 0)
+
+        print(self.spinEncoder.getPosition())
 
 if __name__ == "__main__":
     wpilib.run(UnnamedToaster)

@@ -1,5 +1,6 @@
 name: black-action
-on: [push, pull_request]
+on: pull_request
+
 jobs:
   linter_name:
     name: runner / black
@@ -11,6 +12,7 @@ jobs:
         id: action_black
         with:
           black_args: "."
+          fail_on_error: true
       - name: Annotate diff changes using reviewdog
         if: steps.action_black.outputs.is_formatted == 'true'
         uses: reviewdog/action-suggester@v1

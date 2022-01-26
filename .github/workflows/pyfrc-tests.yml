@@ -1,10 +1,5 @@
 name: PyFRC Tests
-on:
-  push:
-    paths:
-      - 'src/**'
-    tags:
-  release:
+on: pull_request
 
 jobs:
   make_docs:
@@ -12,17 +7,15 @@ jobs:
     name: Excecute PyFRC Tests
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    
+
+    - name: Install pipenv
+      run: pipx install pipenv
+
     - uses: actions/setup-python@v2
       with:
         python-version: '3.8'
+        cache: 'pipenv'
 
-    - run: sudo apt update
+    - run: cd rio && pipenv install
 
-    - run: sudo apt install python3 pipenv
-
-    - run: cd src && pipenv install
-
-    - run: cd src && pipenv run python robot.py test
+    - run: cd rio && pipenv run python robot.py test

@@ -67,9 +67,7 @@ class PhysicsEngine:
         self.leftEncoderSim = EncoderSim.createForChannel(
             constants.kLeftEncoderPorts[0]
         )
-        self.rightEncoderSim = EncoderSim.createForChannel(
-            constants.kRightEncoderPorts[0]
-        )
+        self.rightEncoderSim = EncoderSim.createForChannel(constants.kRightEncoderPorts[0])
 
         self.gyro = AnalogGyroSim(1)
 

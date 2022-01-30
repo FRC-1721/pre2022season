@@ -2,10 +2,9 @@
 # 2022
 
 import logging
-import wpimath
 
+from wpimath import kinematics, geometry
 from commands2 import SubsystemBase
-
 from rev import CANSparkMax, CANSparkMaxLowLevel
 
 from constants.constants import getHardwareConstants
@@ -35,12 +34,16 @@ class Drivetrain(SubsystemBase):
 
         # Create kinematics model
         # TODO: Flesh this out later...
-        self.swerveKinematics = wpimath.kinematics.SwerveDrive4Kinematics(
+        self.swerveKinematics = kinematics.SwerveDrive4Kinematics(
             self.fs_module.getTranslation(),
             self.as_module.getTranslation(),
             self.fp_module.getTranslation(),
             self.ap_module.getTranslation(),
         )
+
+        # Swerve drive odometry (needs gyro.. at some point)
+        # starting_pose = geometry.Pose2d(5.0, 13, geometry.Rotation2d())
+        kinematics.SwerveDrive4Odometry(self.swerveKinematics, geometry.Rotation2d(0))
 
     def periodic(self):
         """
@@ -52,9 +55,20 @@ class Drivetrain(SubsystemBase):
 
     def arcadeDrive(self, fwd, rot):
         """
-        Fill this out later...
+        Generates a chassis speeds using the joystick commands
+        im not sure if this is the best way to do it, but
+        it can always be replaced!
         """
-        pass
+
+        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, 0, rot)
+        _fs, _as, _fp, _ap = self.swerveKinematics.toSwerveModuleStates(
+            arcade_chassis_speeds
+        )
+
+        self.fs_module.setModuleState(_fp)
+        self.as_module.setModuleState(_as)
+        self.fp_module.setModuleState(_fp)
+        self.ap_module.setModuleState(_ap)
 
 
 class SwerveModule:
@@ -75,9 +89,18 @@ class SwerveModule:
         )
 
         # TODO: This formatting needs to be cleaned, and ideally done in yaml
-        self.module_pose = wpimath.geometry.Translation2d(
+        self.module_pose = geometry.Translation2d(
             constants["pose_x"], constants["pose_y"]
         )
 
     def getTranslation(self):
         return self.module_pose
+
+    def setModuleState(self, newState):
+        """
+        Important method that updates
+        the "state" (steering and speed)
+        of a module.
+        """
+
+        print(newState)

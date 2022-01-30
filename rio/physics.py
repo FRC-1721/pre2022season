@@ -64,9 +64,7 @@ class PhysicsEngine:
             (constants.kWheelDiameterMeters / 2),
         )
 
-        self.leftEncoderSim = EncoderSim.createForChannel(
-            constants.kLeftEncoderPorts[0]
-        )
+        self.leftEncoderSim = EncoderSim.createForChannel(constants.kLeftEncoderPorts[0])
         self.rightEncoderSim = EncoderSim.createForChannel(
             constants.kRightEncoderPorts[0]
         )

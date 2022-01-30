@@ -103,4 +103,4 @@ class SwerveModule:
         of a module.
         """
 
-        print(newState)
+        print(newState.optimize())

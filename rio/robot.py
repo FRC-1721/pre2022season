@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+# FRC 1721
+# 2022
 
 import typing
 import wpilib
@@ -7,12 +8,9 @@ import commands2
 from robotcontainer import RobotContainer
 
 
-class MyRobot(commands2.TimedCommandRobot):
+class UnnamedToaster(commands2.TimedCommandRobot):
     """
-    Our default robot class, pass it to wpilib.run
-
-    Command v2 robots are encouraged to inherit from TimedCommandRobot, which
-    has an implementation of robotPeriodic which runs the scheduler for you
+    Timed command robot runs the command scheduler.
     """
 
     autonomousCommand: typing.Optional[commands2.Command] = None
@@ -46,10 +44,8 @@ class MyRobot(commands2.TimedCommandRobot):
         """This function is called periodically during autonomous"""
 
     def teleopInit(self) -> None:
-        # This makes sure that the autonomous stops running when
-        # teleop starts running. If you want the autonomous to
-        # continue until interrupted by another command, remove
-        # this line or comment it out.
+        # Stops the autonomous command when autonomous
+        # ends, change this to remove that feature.
         if self.autonomousCommand:
             self.autonomousCommand.cancel()
 
@@ -62,4 +58,4 @@ class MyRobot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MyRobot)
+    wpilib.run(UnnamedToaster)

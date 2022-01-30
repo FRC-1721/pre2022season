@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cf1d91cc633105a98d06b218ce49b22b753412a436c36ddee042f2dadcd46d0b"
+            "sha256": "cea28a96018ba794a6d53bbc335ea78e4989003e90871d35ab4158b11465960b"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -297,6 +297,7 @@
         },
         "robotpy": {
             "extras": [
+                "commands2",
                 "rev"
             ],
             "hashes": [
@@ -305,6 +306,27 @@
             ],
             "index": "pypi",
             "version": "==2022.0.32"
+        },
+        "robotpy-commands-v2": {
+            "hashes": [
+                "sha256:069b28dda4c1aec1a3d54617e10c9232a3360590128454cd73801cbd5addb11b",
+                "sha256:0ac0653efd9063b146f7d5f12fb7710f06f1d2198cc471007b4021075d206e09",
+                "sha256:0d6853f7ca1513fea64ef9b439c5b3db11ecffc7645e15b1d963ad3ba3ad549c",
+                "sha256:1a1b4c9467af202cb1e7c3d809a8eaa4178c28b220a812d3843fa8e2386234c0",
+                "sha256:3592792d59382fc0adcb57673b56b2b3db147f28073831bd16e6f498ac67ad27",
+                "sha256:3ebef1adb2323cdf33d8afe5289633d9ab4ed7527ff2bc228bce2d1c630559ed",
+                "sha256:68519e48e6aea5f83eb9c57591121b7f408f4d4d38105dc1883f5197c1491abf",
+                "sha256:79f677050490f02630344d1a2e2e6744edf08557bb7ba309cbe3fe5f2880ab51",
+                "sha256:7e4c3bc42564b40b46c884047ede9604d85e4d33053b20018cd1552551a13825",
+                "sha256:8bc1bb7907b27a432f6e7604627f27dcfe451a35d3444c38c8ba06ddce55d943",
+                "sha256:8e02145cbd1fe325806a546e39ad2dd1ed280aef8b63b003aa127708241b2c7f",
+                "sha256:9a4a712dabb9ac10819482ad0bd5e8924fee79dd6cb109b3a12c4240fb9a784b",
+                "sha256:9fb58d3f8bba50b9479dc6eb96c0f29549946d9d9f8c89a271fe51e230a251c7",
+                "sha256:d013c5522746033296a4cbc790c68d8c4579e53a831eee942dd04390b937f129",
+                "sha256:e635dbf676efee49050710fde96d0aff8a9e18aa4c2bc25c98a73d4122303e0f",
+                "sha256:f586ca73b337e3280024bee6b420b3d96c2105f6491c79bf0b732a84a0146e22"
+            ],
+            "version": "==2022.2.1.1"
         },
         "robotpy-hal": {
             "hashes": [

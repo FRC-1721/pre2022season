@@ -14,6 +14,6 @@ jobs:
           black_args: "."
       - name: Annotate diff changes using reviewdog
         if: steps.action_black.outputs.is_formatted == 'true'
-        uses: reviewdog/action-suggester@v2
+        uses: reviewdog/action-suggester@v1
         with:
           tool_name: blackfmt

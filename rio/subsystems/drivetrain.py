@@ -1,139 +1,71 @@
+# FRC 1721
+# 2022
+
 from commands2 import SubsystemBase
 
-from wpilib import SpeedControllerGroup, PWMSparkMax, Encoder, AnalogGyro
-from wpilib.drive import DifferentialDrive
-
-from wpimath.geometry import Pose2d, Rotation2d
-from wpimath.kinematics import DifferentialDriveOdometry, DifferentialDriveWheelSpeeds
-
-import constants
+from rev import CANSparkMax, CANSparkMaxLowLevel
+import wpimath
 
 
 class Drivetrain(SubsystemBase):
-    def __init__(self):
+    """
+    This class represents the whole drivetrain
+    subsystem on the robot.
+    """
 
+    def __init__(self):
         super().__init__()
 
-        # Create the motor controllers and their respective speed controllers.
-        self.leftMotors = SpeedControllerGroup(
-            PWMSparkMax(constants.kLeftMotor1Port),
-            PWMSparkMax(constants.kLeftMotor2Port),
+        # Create swerve drive modules
+        # TODO: pass neatly formatted dict defs for each module
+        self.fs_module = SwerveModule(1, 2, 0.5, -0.5)  # Fore starboard module
+        self.as_module = SwerveModule(3, 4, -0.5, -0.5)  # Aft starboard module
+        self.fp_module = SwerveModule(5, 6, 0.5, 0.5)  # Fore port module
+        self.ap_module = SwerveModule(7, 8, -0.5, 0.5)  # Aft port module
+
+        # Create kinematics model
+        # TODO: Flesh this out later...
+        self.swerveKinematics = wpimath.kinematics.SwerveDrive4Kinematics(
+            self.fs_module.getPose(),
+            self.as_module.getPose(),
+            self.fp_module.getPose(),
+            self.ap_module.getPose(),
         )
-
-        self.rightMotors = SpeedControllerGroup(
-            PWMSparkMax(constants.kRightMotor1Port),
-            PWMSparkMax(constants.kRightMotor2Port),
-        )
-
-        # Create the differential drivetrain object, allowing for easy motor control.
-        self.drive = DifferentialDrive(self.leftMotors, self.rightMotors)
-
-        # Create the encoder objects.
-        self.leftEncoder = Encoder(
-            constants.kLeftEncoderPorts[0],
-            constants.kLeftEncoderPorts[1],
-            constants.kLeftEncoderReversed,
-        )
-
-        self.rightEncoder = Encoder(
-            constants.kRightEncoderPorts[0],
-            constants.kRightEncoderPorts[1],
-            constants.kRightEncoderReversed,
-        )
-
-        # Configure the encoder so it knows how many encoder units are in one rotation.
-        self.leftEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
-        self.rightEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
-
-        # Create the gyro, a sensor which can indicate the heading of the robot relative
-        # to a customizable position.
-        self.gyro = AnalogGyro(1)
-
-        # Create the an object for our odometry, which will utilize sensor data to
-        # keep a record of our position on the field.
-        self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
-
-        # Reset the encoders upon the initilization of the robot.
-        self.resetEncoders()
 
     def periodic(self):
         """
-        Called periodically when it can be called. Updates the robot's
-        odometry with sensor data.
+        Called periodically when possible,
+        ie: when other commands are not running.
+        Odom/constant updates go here
         """
-        self.odometry.update(
-            self.gyro.getRotation2d(),
-            self.leftEncoder.getDistance(),
-            self.rightEncoder.getDistance(),
-        )
-
-    def getPose(self):
-        """Returns the current position of the robot using it's odometry."""
-        return self.odometry.getPose()
-
-    def getWheelSpeeds(self):
-        """Return an object which represents the wheel speeds of our drivetrain."""
-        speeds = DifferentialDriveWheelSpeeds(
-            self.leftEncoder.getRate(), self.rightEncoder.getRate()
-        )
-        return speeds
-
-    def resetOdometry(self, pose):
-        """Resets the robot's odometry to a given position."""
-        self.resetEncoders()
-        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+        pass
 
     def arcadeDrive(self, fwd, rot):
-        """Drive the robot with standard arcade controls."""
-        self.drive.arcadeDrive(fwd, rot)
-
-    def tankDriveVolts(self, leftVolts, rightVolts):
-        """Control the robot's drivetrain with voltage inputs for each side."""
-        # Set the voltage of the left side.
-        self.leftMotors.setVoltage(leftVolts)
-
-        # Set the voltage of the right side. It's
-        # inverted with a negative sign because it's motors need to spin in the negative direction
-        # to move forward.
-        self.rightMotors.setVoltage(-rightVolts)
-
-        # Resets the timer for this motor's MotorSafety
-        self.drive.feed()
-
-    def resetEncoders(self):
-        """Resets the encoders of the drivetrain."""
-        self.leftEncoder.reset()
-        self.rightEncoder.reset()
-
-    def getAverageEncoderDistance(self):
         """
-        Take the sum of each encoder's traversed distance and divide it by two,
-        since we have two encoder values, to find the average value of the two.
+        Fill this out later...
         """
-        return (self.leftEncoder.getDistance() + self.rightEncoder.getDistance()) / 2
+        pass
 
-    def getLeftEncoder(self):
-        """Returns the left encoder object."""
-        return self.leftEncoder
 
-    def getRightEncoder(self):
-        """Returns the right encoder object."""
-        return self.rightEncoder
+class SwerveModule:
+    """
+    Normally we inherit 'components'
+    from vendors. Ex: CANSparkMax, Pneumatics,
+    etc. But i think this may make it easier
+    to organize.
+    """
 
-    def setMaxOutput(self, maxOutput):
-        """Set the max percent output of the drivetrain, allowing for slower control."""
-        self.drive.setMaxOutput(maxOutput)
+    def __init__(self, drive_id, steer_id, x_pose, y_pose):
+        # Setup one drive and one steer motor each.
+        self.drive_motor = CANSparkMax(
+            drive_id, CANSparkMaxLowLevel.MotorType.kBrushless
+        )
+        self.steer_motor = CANSparkMax(
+            steer_id, CANSparkMaxLowLevel.MotorType.kBrushless
+        )
 
-    def zeroHeading(self):
-        """Zeroes the gyro's heading."""
-        self.gyro.reset()
+        # TODO: This formatting needs to be cleaned, and ideally done in yaml
+        self.module_pose = wpimath.geometry.Translation2d(x_pose, y_pose)
 
-    def getHeading(self):
-        """Return the current heading of the robot."""
-        return self.gyro.getRotation2d().getDegrees()
-
-    def getTurnRate(self):
-        """Returns the turning rate of the robot using the gyro."""
-
-        # The minus sign negates the value.
-        return -self.gyro.getRate()
+    def getPose(self):
+        return self.module_pose

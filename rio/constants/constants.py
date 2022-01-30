@@ -25,3 +25,20 @@ def getHardwareConstants():
 
     # When all is done, return the important bits!
     return hardware
+
+
+def getControllerConstants():
+    controls = {}
+
+    try:
+        # Try opening robot_controls.yaml
+        with open("constants/robot_controls.yaml", "r") as controls_yaml:
+            # Use yaml.safe_load to load the yaml into a dict
+            controls = yaml.safe_load(controls_yaml)
+    except FileNotFoundError as e:
+        # If the file is not found, report it!
+        logging.error("Controls config yaml not found!")
+        raise e
+
+    # When all is done, return the important bits!
+    return controls

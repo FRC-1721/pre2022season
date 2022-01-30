@@ -10,6 +10,9 @@ from commands.flybywire import FlyByWire
 # Subsystens
 from subsystems.drivetrain import Drivetrain
 
+# Constants
+from constants.constants import getControllerConstants
+
 
 class RobotContainer:
     """
@@ -18,8 +21,13 @@ class RobotContainer:
     """
 
     def __init__(self) -> None:
+        # Setup constants
+        self.constants = getControllerConstants()
+
         # The driver's controller
-        self.driverController = wpilib.Joystick(1)
+        self.driverController = wpilib.Joystick(
+            self.constants["mode_a"]["driver"]["driverstation_port"]
+        )
 
         # The robot's subsystems
         self.drivetrain = Drivetrain()

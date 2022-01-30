@@ -1,10 +1,14 @@
 # FRC 1721
 # 2022
 
+import logging
+import wpimath
+
 from commands2 import SubsystemBase
 
 from rev import CANSparkMax, CANSparkMaxLowLevel
-import wpimath
+
+from constants.constants import getHardwareConstants
 
 
 class Drivetrain(SubsystemBase):
@@ -16,20 +20,26 @@ class Drivetrain(SubsystemBase):
     def __init__(self):
         super().__init__()
 
+        # Get hardware constants
+        self.constants = getHardwareConstants()
+
         # Create swerve drive modules
-        # TODO: pass neatly formatted dict defs for each module
-        self.fs_module = SwerveModule(1, 2, 0.5, -0.5)  # Fore starboard module
-        self.as_module = SwerveModule(3, 4, -0.5, -0.5)  # Aft starboard module
-        self.fp_module = SwerveModule(5, 6, 0.5, 0.5)  # Fore port module
-        self.ap_module = SwerveModule(7, 8, -0.5, 0.5)  # Aft port module
+        # Fore starboard module
+        self.fs_module = SwerveModule(self.constants["drivetrain"]["fs_module"])
+        # Aft starboard module
+        self.as_module = SwerveModule(self.constants["drivetrain"]["as_module"])
+        # Fore port module
+        self.fp_module = SwerveModule(self.constants["drivetrain"]["fp_module"])
+        # Aft port module
+        self.ap_module = SwerveModule(self.constants["drivetrain"]["ap_module"])
 
         # Create kinematics model
         # TODO: Flesh this out later...
         self.swerveKinematics = wpimath.kinematics.SwerveDrive4Kinematics(
-            self.fs_module.getPose(),
-            self.as_module.getPose(),
-            self.fp_module.getPose(),
-            self.ap_module.getPose(),
+            self.fs_module.getTranslation(),
+            self.as_module.getTranslation(),
+            self.fp_module.getTranslation(),
+            self.ap_module.getTranslation(),
         )
 
     def periodic(self):
@@ -55,17 +65,19 @@ class SwerveModule:
     to organize.
     """
 
-    def __init__(self, drive_id, steer_id, x_pose, y_pose):
+    def __init__(self, constants):
         # Setup one drive and one steer motor each.
         self.drive_motor = CANSparkMax(
-            drive_id, CANSparkMaxLowLevel.MotorType.kBrushless
+            constants["drive_id"], CANSparkMaxLowLevel.MotorType.kBrushless
         )
         self.steer_motor = CANSparkMax(
-            steer_id, CANSparkMaxLowLevel.MotorType.kBrushless
+            constants["steer_id"], CANSparkMaxLowLevel.MotorType.kBrushless
         )
 
         # TODO: This formatting needs to be cleaned, and ideally done in yaml
-        self.module_pose = wpimath.geometry.Translation2d(x_pose, y_pose)
+        self.module_pose = wpimath.geometry.Translation2d(
+            constants["pose_x"], constants["pose_y"]
+        )
 
-    def getPose(self):
+    def getTranslation(self):
         return self.module_pose

@@ -18,7 +18,6 @@ class RobotContainer:
     """
 
     def __init__(self) -> None:
-
         # The driver's controller
         self.driverController = wpilib.Joystick(1)
 

@@ -1,0 +1,29 @@
+# This file defines the robot's
+# physical dimensions. Things like
+# Motor placement, max and min extensions
+# of arms, and similar should go here.
+
+drivetrain:
+  fs_module: # Fore Starboard
+    pose_x: 0.5   # Updated never
+    pose_y: -0.5  # Updated never
+    drive_id: 1   # Updated never
+    steer_id: 2   # Updated never
+
+  as_module: # Aft Starboard
+    pose_x: -0.5  # Updated never
+    pose_y: -0.5  # Updated never
+    drive_id: 3   # Updated never
+    steer_id: 4   # Updated never
+
+  fp_module: # Fore Port
+    pose_x: 0.5   # Updated never
+    pose_y: 0.5   # Updated never
+    drive_id: 5   # Updated never
+    steer_id: 6   # Updated never
+
+  ap_module: # Aft Port
+    pose_x: -0.5  # Updated never
+    pose_y: 0.5   # Updated never
+    drive_id: 7   # Updated never
+    steer_id: 8   # Updated never

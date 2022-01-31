@@ -78,8 +78,8 @@ class Drivetrain(SubsystemBase):
         it can always be replaced!
         """
 
-        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, srf, rot)
-        _fs, _ap, _fp, _as = self.swerveKinematics.toSwerveModuleStates(
+        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, rot, srf)
+        _fp, _fs, _ap, _as = self.swerveKinematics.toSwerveModuleStates(
             arcade_chassis_speeds
         )
 

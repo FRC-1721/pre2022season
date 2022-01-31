@@ -38,9 +38,9 @@ class RobotContainer:
         self.drivetrain.setDefaultCommand(
             FlyByWire(
                 self.drivetrain,
-                lambda: -self.driverController.getY(),
-                lambda: self.driverController.getX(),
+                lambda: -self.driverController.getRawAxis(1),
                 lambda: self.driverController.getRawAxis(2),
+                lambda: self.driverController.getRawAxis(0),
             )
         )
 

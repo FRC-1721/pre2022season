@@ -30,17 +30,13 @@ class Drivetrain(SubsystemBase):
 
         # Create swerve drive modules
         # Fore starboard module
-        self.fs_module = SwerveModule(
-            self.constants["drivetrain"]["fs_module"])
+        self.fs_module = SwerveModule(self.constants["drivetrain"]["fs_module"])
         # Aft starboard module
-        self.as_module = SwerveModule(
-            self.constants["drivetrain"]["as_module"])
+        self.as_module = SwerveModule(self.constants["drivetrain"]["as_module"])
         # Fore port module
-        self.fp_module = SwerveModule(
-            self.constants["drivetrain"]["fp_module"])
+        self.fp_module = SwerveModule(self.constants["drivetrain"]["fp_module"])
         # Aft port module
-        self.ap_module = SwerveModule(
-            self.constants["drivetrain"]["ap_module"])
+        self.ap_module = SwerveModule(self.constants["drivetrain"]["ap_module"])
 
         # Create kinematics model
         # TODO: Flesh this out later...
@@ -53,8 +49,7 @@ class Drivetrain(SubsystemBase):
 
         # Swerve drive odometry (needs gyro.. at some point)
         # starting_pose = geometry.Pose2d(5.0, 13, geometry.Rotation2d())
-        kinematics.SwerveDrive4Odometry(
-            self.swerveKinematics, geometry.Rotation2d(0))
+        kinematics.SwerveDrive4Odometry(self.swerveKinematics, geometry.Rotation2d(0))
 
     def periodic(self):
         """

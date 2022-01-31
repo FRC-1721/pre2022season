@@ -9,3 +9,4 @@ wpilib = {extras = ["all"], version = "*"}
 pyyaml = "*"
 
 [dev-packages]
+black = "*"

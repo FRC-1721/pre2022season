@@ -6,25 +6,25 @@
 drivetrain:
   fs_module: # Fore Starboard
     pose_x: 0.5   # Updated never by Joe
-    pose_y: 0.5  # Updated never by Joe
+    pose_y: 0.5   # Updated 1/31/22 by Khan
     drive_id: 1   # Updated never by Joe
     steer_id: 2   # Updated never by Joe
 
   as_module: # Aft Starboard
-    pose_x: 0.5  # Updated never by Joe
+    pose_x: 0.5   # Updated 1/31/22 by Khan
     pose_y: -0.5  # Updated never by Joe
     drive_id: 3   # Updated never by Joe
     steer_id: 4   # Updated never by Joe
 
   fp_module: # Fore Port
-    pose_x: -0.5   # Updated never by Joe
+    pose_x: -0.5  # Updated 1/31/22 by Khan
     pose_y: 0.5   # Updated never by Joe
     drive_id: 5   # Updated never by Joe
     steer_id: 6   # Updated never by Joe
 
   ap_module: # Aft Port
     pose_x: -0.5  # Updated never by Joe
-    pose_y: -0.5   # Updated never by Joe
+    pose_y: -0.5  # Updated 1/31/22 by Khan
     drive_id: 7   # Updated never by Joe
     steer_id: 8   # Updated never by Joe
   

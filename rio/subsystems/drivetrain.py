@@ -2,10 +2,13 @@
 # 2022
 
 import logging
+import networktables
 
 from wpimath import kinematics, geometry
 from commands2 import SubsystemBase
 from rev import CANSparkMax, CANSparkMaxLowLevel
+from networktables import NetworkTables
+import wpimath
 
 from constants.constants import getHardwareConstants
 
@@ -21,6 +24,9 @@ class Drivetrain(SubsystemBase):
 
         # Get hardware constants
         self.constants = getHardwareConstants()
+
+        # Configure networktables
+        self.configureNetworkTables()
 
         # Create swerve drive modules
         # Fore starboard module
@@ -51,7 +57,14 @@ class Drivetrain(SubsystemBase):
         ie: when other commands are not running.
         Odom/constant updates go here
         """
-        pass
+        self.fs_actual.setDouble(self.fs_module.getHeading())
+        self.fs_target.setDouble(self.fs_module.getHeading())
+        self.as_actual.setDouble(self.as_module.getHeading())
+        self.as_target.setDouble(self.as_module.getHeading())
+        self.fp_actual.setDouble(self.fp_module.getHeading())
+        self.fp_target.setDouble(self.fp_module.getHeading())
+        self.ap_actual.setDouble(self.ap_module.getHeading())
+        self.ap_target.setDouble(self.ap_module.getHeading())
 
     def arcadeDrive(self, fwd, rot):
         """
@@ -69,6 +82,23 @@ class Drivetrain(SubsystemBase):
         self.as_module.setModuleState(_as)
         self.fp_module.setModuleState(_fp)
         self.ap_module.setModuleState(_ap)
+
+    def configureNetworkTables(self):
+        # Get an instance of networktables
+        self.nt = NetworkTables.getDefault()
+
+        # Get the smart dashboard table
+        self.sd = self.nt.getTable("SmartDashboard")
+
+        # Setup all of the networktable entries
+        self.fs_actual = self.nt.getEntry("swerve_drive/fs_actual")
+        self.fs_target = self.nt.getEntry("swerve_drive/fs_target")
+        self.as_actual = self.nt.getEntry("swerve_drive/as_actual")
+        self.as_target = self.nt.getEntry("swerve_drive/as_target")
+        self.fp_actual = self.nt.getEntry("swerve_drive/fp_actual")
+        self.fp_target = self.nt.getEntry("swerve_drive/fp_target")
+        self.ap_actual = self.nt.getEntry("swerve_drive/ap_actual")
+        self.ap_target = self.nt.getEntry("swerve_drive/ap_target")
 
 
 class SwerveModule:
@@ -93,6 +123,10 @@ class SwerveModule:
             constants["pose_x"], constants["pose_y"]
         )
 
+        # Current state variables
+        self.is_zeroed = False
+        self.state = kinematics.SwerveModuleState(0, geometry.Rotation2d(0))
+
     def getTranslation(self):
         return self.module_pose
 
@@ -103,5 +137,13 @@ class SwerveModule:
         of a module.
         """
 
-        # TODO: Use optimization at some point.
-        print(newState)
+        # TODO: Use optimization at some point
+        self.state = newState
+
+    def getHeading(self):
+        """
+        Returns the current heading of
+        this module
+        """
+
+        return self.state.angle.radians()

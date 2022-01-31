@@ -90,15 +90,17 @@ class Drivetrain(SubsystemBase):
         # Get the smart dashboard table
         self.sd = self.nt.getTable("SmartDashboard")
 
+        self.swerve_table = self.sd.getSubTable("SwerveDrive")
+
         # Setup all of the networktable entries
-        self.fs_actual = self.nt.getEntry("swerve_drive/fs_actual")
-        self.fs_target = self.nt.getEntry("swerve_drive/fs_target")
-        self.as_actual = self.nt.getEntry("swerve_drive/as_actual")
-        self.as_target = self.nt.getEntry("swerve_drive/as_target")
-        self.fp_actual = self.nt.getEntry("swerve_drive/fp_actual")
-        self.fp_target = self.nt.getEntry("swerve_drive/fp_target")
-        self.ap_actual = self.nt.getEntry("swerve_drive/ap_actual")
-        self.ap_target = self.nt.getEntry("swerve_drive/ap_target")
+        self.fs_actual = self.swerve_table.getEntry("fs_actual")
+        self.fs_target = self.swerve_table.getEntry("fs_target")
+        self.as_actual = self.swerve_table.getEntry("as_actual")
+        self.as_target = self.swerve_table.getEntry("as_target")
+        self.fp_actual = self.swerve_table.getEntry("fp_actual")
+        self.fp_target = self.swerve_table.getEntry("fp_target")
+        self.ap_actual = self.swerve_table.getEntry("ap_actual")
+        self.ap_target = self.swerve_table.getEntry("ap_target")
 
 
 class SwerveModule:

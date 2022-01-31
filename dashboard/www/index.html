@@ -2,91 +2,83 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 </head>
 
 <body>
 
-	<!-- This starts the NetworkTables websocket, it can be accessed from multiple
+    <!-- This starts the NetworkTables websocket, it can be accessed from multiple
      pages simultaneously -->
-	<script src="/networktables/networktables.js"></script>
+    <script src="/networktables/networktables.js"></script>
 
-	<!-- Obviously, you will want to copy this file locally in a real 
+    <!-- Obviously, you will want to copy this file locally in a real 
      dashboard, as the Driver Station won't have internet access -->
-	<script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
 
-	<!-- uncomment this is you want to use included utility functions that
+    <!-- uncomment this is you want to use included utility functions that
      implement common functionality that you might find useful. Requires
      that d3.js and jQuery are included first -->
-	<!-- <script src="/networktables/utils.js"></script> -->
+    <!-- <script src="/networktables/utils.js"></script> -->
 
-	<div>
-		NetworkTables websocket: <span id="connectstate">Unknown state</span><br />
-		Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
-	</div>
-	<hr />
+    <div>
+        NetworkTables websocket: <span id="connectstate">Unknown state</span><br />
+        Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
+    </div>
+    <hr />
 
-	<table id="nt" border=1>
-		<tbody></tbody>
-	</table>
+    <canvas id="SwerveCanvas" width="1000" height="400"></canvas>
 
 
-	<script type="text/javascript">
-		"use strict";
+    <script type="text/javascript">
+        "use strict";
 
-		$(document).ready(function () {
+        $(document).ready(function () {
 
-			// sets a function that will be called when the websocket connects/disconnects
-			NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
+            // sets a function that will be called when the websocket connects/disconnects
+            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
 
-			// sets a function that will be called when the robot connects/disconnects
-			NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+            // sets a function that will be called when the robot connects/disconnects
+            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
 
-			// sets a function that will be called when any NetworkTables key/value changes
-			NetworkTables.addGlobalListener(onValueChanged, true);
-		});
+            NetworkTables.addKeyListener('/SmartDashboard/SwerveDrive/fp_actual', swerveListener, true);
+            console.log("Started")
+        });
 
+        function swerveListener(key, value, isNew) {
+            console.log(value)
 
-		function onRobotConnection(connected) {
-			$('#robotstate').text(connected ? "Connected!" : "Disconnected");
-			$('#robotAddress').text(connected ? NetworkTables.getRobotAddress() : "disconnected");
-		}
+            var canvas = document.getElementById('SwerveCanvas');
+            if (canvas.getContext) {
+                var ctx = canvas.getContext('2d');
 
-		function onNetworkTablesConnection(connected) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-			if (connected) {
-				$("#connectstate").text("Connected!");
+                ctx.fillRect(25, 25, 100, 100);
+                ctx.rotate(value)
+            }
+        }
 
-				// clear the table
-				$("#nt tbody > tr").remove();
+        function onRobotConnection(connected) {
+            $('#robotstate').text(connected ? "Connected!" : "Disconnected");
+            $('#robotAddress').text(connected ? NetworkTables.getRobotAddress() : "disconnected");
+        }
 
-			} else {
-				$("#connectstate").text("Disconnected!");
-			}
-		}
+        function onNetworkTablesConnection(connected) {
 
-		function onValueChanged(key, value, isNew) {
+            if (connected) {
+                $("#connectstate").text("Connected!");
 
-			// key thing here: we're using the various NetworkTable keys as
-			// the id of the elements that we're appending, for simplicity. However,
-			// the key names aren't always valid HTML identifiers, so we use
-			// the NetworkTables.keyToId() function to convert them appropriately
+                // clear the table
+                $("#nt tbody > tr").remove();
 
-			if (isNew) {
-				var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
-				$('<td></td>').text(key).appendTo(tr);
-				$('<td></td>').attr('id', NetworkTables.keyToId(key))
-					.text(value)
-					.appendTo(tr);
-			} else {
+                console.log(NetworkTables.getKeys())
 
-				// similarly, use keySelector to convert the key to a valid jQuery
-				// selector. This should work for class names also, not just for ids
-				$('#' + NetworkTables.keySelector(key)).text(value);
-			}
-		}
+            } else {
+                $("#connectstate").text("Disconnected!");
+            }
+        }
 
-	</script>
+    </script>
 
 </body>
 

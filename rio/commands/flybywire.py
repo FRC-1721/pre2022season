@@ -14,15 +14,18 @@ class FlyByWire(commands2.CommandBase):
         drivetrain: Drivetrain,
         forward: typing.Callable[[], float],
         rotation: typing.Callable[[], float],
+        strafe: typing.Callable[[], float],
     ) -> None:
         super().__init__()
 
         self.drivetrain = drivetrain  # This is a 'local' instance of drivetrain
         self.forward = forward  # Forward command
         self.rotation = rotation  # Rotation command
+        self.strafe = strafe
 
         # Adding drivetrain as a requirement ensures no other command will interrupt us
         self.addRequirements([self.drivetrain])
 
     def execute(self) -> None:
-        self.drivetrain.arcadeDrive(self.forward(), self.rotation())
+        self.drivetrain.arcadeDrive(
+            self.forward(), self.rotation(), self.strafe())

@@ -40,6 +40,7 @@ class RobotContainer:
                 self.drivetrain,
                 lambda: -self.driverController.getY(),
                 lambda: self.driverController.getX(),
+                lambda: self.driverController.getRawAxis(2),
             )
         )
 

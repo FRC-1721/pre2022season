@@ -30,13 +30,17 @@ class Drivetrain(SubsystemBase):
 
         # Create swerve drive modules
         # Fore starboard module
-        self.fs_module = SwerveModule(self.constants["drivetrain"]["fs_module"])
+        self.fs_module = SwerveModule(
+            self.constants["drivetrain"]["fs_module"])
         # Aft starboard module
-        self.as_module = SwerveModule(self.constants["drivetrain"]["as_module"])
+        self.as_module = SwerveModule(
+            self.constants["drivetrain"]["as_module"])
         # Fore port module
-        self.fp_module = SwerveModule(self.constants["drivetrain"]["fp_module"])
+        self.fp_module = SwerveModule(
+            self.constants["drivetrain"]["fp_module"])
         # Aft port module
-        self.ap_module = SwerveModule(self.constants["drivetrain"]["ap_module"])
+        self.ap_module = SwerveModule(
+            self.constants["drivetrain"]["ap_module"])
 
         # Create kinematics model
         # TODO: Flesh this out later...
@@ -49,7 +53,8 @@ class Drivetrain(SubsystemBase):
 
         # Swerve drive odometry (needs gyro.. at some point)
         # starting_pose = geometry.Pose2d(5.0, 13, geometry.Rotation2d())
-        kinematics.SwerveDrive4Odometry(self.swerveKinematics, geometry.Rotation2d(0))
+        kinematics.SwerveDrive4Odometry(
+            self.swerveKinematics, geometry.Rotation2d(0))
 
     def periodic(self):
         """
@@ -66,19 +71,19 @@ class Drivetrain(SubsystemBase):
         self.ap_actual.setDouble(self.ap_module.getHeading())
         self.ap_target.setDouble(self.ap_module.getHeading())
 
-    def arcadeDrive(self, fwd, rot):
+    def arcadeDrive(self, fwd, srf, rot):
         """
         Generates a chassis speeds using the joystick commands
         im not sure if this is the best way to do it, but
         it can always be replaced!
         """
 
-        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, 0, rot)
-        _fs, _as, _fp, _ap = self.swerveKinematics.toSwerveModuleStates(
+        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, srf, rot)
+        _fs, _ap, _fp, _as = self.swerveKinematics.toSwerveModuleStates(
             arcade_chassis_speeds
         )
 
-        self.fs_module.setModuleState(_fp)
+        self.fs_module.setModuleState(_fs)
         self.as_module.setModuleState(_as)
         self.fp_module.setModuleState(_fp)
         self.ap_module.setModuleState(_ap)

@@ -2,14 +2,11 @@
 # 2022
 
 import logging
-import networktables
 
 from wpimath import kinematics, geometry
 from commands2 import SubsystemBase
 from rev import CANSparkMax, CANSparkMaxLowLevel
 from networktables import NetworkTables
-import wpimath
-
 from constants.constants import getConstants
 
 
@@ -49,7 +46,9 @@ class Drivetrain(SubsystemBase):
 
         # Swerve drive odometry (needs gyro.. at some point)
         # starting_pose = geometry.Pose2d(5.0, 13, geometry.Rotation2d())
-        kinematics.SwerveDrive4Odometry(self.swerveKinematics, geometry.Rotation2d(0))
+        self.odometry = kinematics.SwerveDrive4Odometry(
+            self.swerveKinematics, geometry.Rotation2d(0)
+        )
 
     def periodic(self):
         """
@@ -57,6 +56,16 @@ class Drivetrain(SubsystemBase):
         ie: when other commands are not running.
         Odom/constant updates go here
         """
+        # Update robot odometry using ModuleStates
+        self.odometry.update(
+            geometry.Rotation2d(0),  # This needs to be replaced with a gyro.
+            self.fp_module.getModuleState(),
+            self.fs_module.getModuleState(),
+            self.ap_module.getModuleState(),
+            self.as_module.getModuleState(),
+        )
+
+        # Networktables/dashboard
         self.fs_actual.setDouble(self.fs_module.getHeading())
         self.fs_target.setDouble(self.fs_module.getHeading())
         self.as_actual.setDouble(self.as_module.getHeading())
@@ -143,6 +152,13 @@ class SwerveModule:
 
         # TODO: Use optimization at some point
         self.state = newState
+
+    def getModuleState(self):
+        """
+        Returns the current module state,
+        useful for odom.
+        """
+        return self.state
 
     def getHeading(self):
         """

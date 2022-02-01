@@ -58,6 +58,9 @@ class MyRobot(commands2.TimedCommandRobot):
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()
 
+    def _simulationPeriodic(self) -> None:
+        """Called during simulation after the rest of the code has excecuted."""
+
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)

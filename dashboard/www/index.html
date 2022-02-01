@@ -185,7 +185,8 @@
                     lf.beginPath();
                     lf.translate(25 + 50 / 2, 300 + 75 / 2);
                     lf.rotate(value);
-                    lf.rect(-50 / 2, -75 / 2, 50, 75);
+                    lf.drawImage(swerveDriveImage, -50/2, -75/2+(-75/2+75)/2);
+                    //lf.rect(-50 / 2, -75 / 2, 50, 75);
                     lf.fill();
                     lf.restore();
                 }

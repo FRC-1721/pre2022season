@@ -162,7 +162,7 @@
                     //draw the rect on the transformed context
                     //Note: after transforming [0,0] is visually [x,y]
                     //so the rect needs to be offset accordingly when drawn
-                    lf.drawImage(swerveDriveImage, -50 / 2, -75 / 2);
+                    lf.drawImage(swerveDriveImage, -39/2, -48/2);
                     lf.fill();
                     //restore the context to its untranslated/unrotated state
                     lf.restore();
@@ -174,7 +174,7 @@
                     lf.beginPath();
                     lf.translate(200 + 50 / 2, 25 + 75 / 2);
                     lf.rotate(value);
-                    lf.drawImage(swerveDriveImage, 50, 75);
+                    lf.drawImage(swerveDriveImage, -39/2, -48/2);
                     lf.fill();
                     lf.restore();
                 }
@@ -186,7 +186,6 @@
                     lf.translate(25 + 50, 300 + 75);
                     lf.rotate(value);
                     lf.drawImage(swerveDriveImage, -39/2, -48/2);
-                    //lf.rect(-50 / 2, -75 / 2, 50, 75);
                     lf.fill();
                     lf.restore();
                 }
@@ -197,7 +196,7 @@
                     lf.beginPath();
                     lf.translate(200 + 50 / 2, 300 + 75 / 2);
                     lf.rotate(value);
-                    lf.rect(-50 / 2, -75 / 2, 50, 75);
+                    lf.drawImage(swerveDriveImage, -39/2, -48/2);
                     lf.fill();
                     lf.restore();
                 }

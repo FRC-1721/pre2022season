@@ -1,5 +1,9 @@
-Welcome to Tidal Force Infrastructure's documentation!
-======================================================
+2022 Official 1721 Robot Manual
+===============================
+
+.. warning::
+   Make sure this manual's revision hash and the robot hash match!
+
 
 .. toctree::
    :maxdepth: 3

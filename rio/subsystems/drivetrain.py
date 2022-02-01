@@ -10,7 +10,7 @@ from rev import CANSparkMax, CANSparkMaxLowLevel
 from networktables import NetworkTables
 import wpimath
 
-from constants.constants import getHardwareConstants
+from constants.constants import getConstants
 
 
 class Drivetrain(SubsystemBase):
@@ -23,7 +23,7 @@ class Drivetrain(SubsystemBase):
         super().__init__()
 
         # Get hardware constants
-        self.constants = getHardwareConstants()
+        self.constants = getConstants("robot_hardware")
 
         # Configure networktables
         self.configureNetworkTables()
@@ -41,10 +41,10 @@ class Drivetrain(SubsystemBase):
         # Create kinematics model
         # TODO: Flesh this out later...
         self.swerveKinematics = kinematics.SwerveDrive4Kinematics(
-            self.fs_module.getTranslation(),
-            self.as_module.getTranslation(),
             self.fp_module.getTranslation(),
+            self.fs_module.getTranslation(),
             self.ap_module.getTranslation(),
+            self.as_module.getTranslation(),
         )
 
         # Swerve drive odometry (needs gyro.. at some point)
@@ -120,14 +120,16 @@ class SwerveModule:
             constants["steer_id"], CANSparkMaxLowLevel.MotorType.kBrushless
         )
 
-        # TODO: This formatting needs to be cleaned, and ideally done in yaml
+        # Construct the pose of this module
         self.module_pose = geometry.Translation2d(
             constants["pose_x"], constants["pose_y"]
         )
 
         # Current state variables
         self.is_zeroed = False
-        self.state = kinematics.SwerveModuleState(0, geometry.Rotation2d(0))
+        self.state = kinematics.SwerveModuleState(
+            0, geometry.Rotation2d(0)
+        )  # This module state is default 0 speed, and 0 rotation
 
     def getTranslation(self):
         return self.module_pose

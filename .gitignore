@@ -3,3 +3,5 @@ imgui.ini
 .vscode
 simgui*
 __pycache__
+_build
+*.*~

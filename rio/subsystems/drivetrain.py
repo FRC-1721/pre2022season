@@ -10,7 +10,7 @@ from rev import CANSparkMax, CANSparkMaxLowLevel
 from networktables import NetworkTables
 import wpimath
 
-from constants.constants import getHardwareConstants
+from constants.constants import getConstants
 
 
 class Drivetrain(SubsystemBase):
@@ -23,7 +23,7 @@ class Drivetrain(SubsystemBase):
         super().__init__()
 
         # Get hardware constants
-        self.constants = getHardwareConstants()
+        self.constants = getConstants("robot_hardware")
 
         # Configure networktables
         self.configureNetworkTables()

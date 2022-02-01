@@ -4,10 +4,9 @@
 import yaml
 import logging
 
-
-# A simple series of defs, each used to load
-# and prepare a set of yaml constants for use
-# elsewhere. Do NOT use this file for anything else!
+"""
+Use this file only for storing non-changing constants.
+"""
 
 
 def getConstants(identifier):

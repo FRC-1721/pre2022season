@@ -56,4 +56,4 @@ class RobotContainer:
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
-        self.chooser.setDefaultOption("Auto", self.Auto) 
+        self.chooser.setDefaultOption("Auto", self.Auto)

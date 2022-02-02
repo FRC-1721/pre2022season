@@ -3,7 +3,8 @@
 # Motor placement, max and min extensions
 # of arms, and similar should go here.
 
-drivetrain:  
+drivetrain:
+  # All pose coordinates are in meters.
   fp_module: # Fore Port
     pose_x: 0.5   # Updated 2/1/22 by Joe
     pose_y: 0.5   # Updated 2/1/22 by Joe

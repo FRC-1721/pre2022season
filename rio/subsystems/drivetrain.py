@@ -26,14 +26,14 @@ class Drivetrain(SubsystemBase):
         self.configureNetworkTables()
 
         # Create swerve drive modules
-        # Fore starboard module
-        self.fs_module = SwerveModule(self.constants["drivetrain"]["fs_module"])
-        # Aft starboard module
-        self.as_module = SwerveModule(self.constants["drivetrain"]["as_module"])
         # Fore port module
         self.fp_module = SwerveModule(self.constants["drivetrain"]["fp_module"])
+        # Fore starboard module
+        self.fs_module = SwerveModule(self.constants["drivetrain"]["fs_module"])
         # Aft port module
         self.ap_module = SwerveModule(self.constants["drivetrain"]["ap_module"])
+        # Aft starboard module
+        self.as_module = SwerveModule(self.constants["drivetrain"]["as_module"])
 
         # Create kinematics model
         # TODO: Flesh this out later...
@@ -67,13 +67,13 @@ class Drivetrain(SubsystemBase):
 
         # Networktables/dashboard
         self.fs_actual.setDouble(self.fs_module.getHeading())
-        self.fs_target.setDouble(self.fs_module.getHeading())
+        # self.fs_target.setDouble(self.fs_module.getHeading())
         self.as_actual.setDouble(self.as_module.getHeading())
-        self.as_target.setDouble(self.as_module.getHeading())
+        # self.as_target.setDouble(self.as_module.getHeading())
         self.fp_actual.setDouble(self.fp_module.getHeading())
-        self.fp_target.setDouble(self.fp_module.getHeading())
+        # self.fp_target.setDouble(self.fp_module.getHeading())
         self.ap_actual.setDouble(self.ap_module.getHeading())
-        self.ap_target.setDouble(self.ap_module.getHeading())
+        # self.ap_target.setDouble(self.ap_module.getHeading())
 
     def arcadeDrive(self, fwd, srf, rot):
         """
@@ -82,15 +82,17 @@ class Drivetrain(SubsystemBase):
         it can always be replaced!
         """
 
-        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, rot, srf)
+        arcade_chassis_speeds = kinematics.ChassisSpeeds(fwd, srf, rot)
         _fp, _fs, _ap, _as = self.swerveKinematics.toSwerveModuleStates(
             arcade_chassis_speeds
         )
 
-        self.fs_module.setModuleState(_fs)
-        self.as_module.setModuleState(_as)
-        self.fp_module.setModuleState(_fp)
-        self.ap_module.setModuleState(_ap)
+        # TODO: These modules should NOT be swapped! This is still a bug, see #9
+        # https://github.com/FRC-1721/pre2022season/issues/9
+        self.fp_module.setModuleState(_fs)
+        self.fs_module.setModuleState(_fp)
+        self.ap_module.setModuleState(_as)
+        self.as_module.setModuleState(_ap)
 
     def configureNetworkTables(self):
         # Get an instance of networktables
@@ -103,13 +105,14 @@ class Drivetrain(SubsystemBase):
 
         # Setup all of the networktable entries
         self.fs_actual = self.swerve_table.getEntry("fs_actual")
-        self.fs_target = self.swerve_table.getEntry("fs_target")
+        # self.fs_target = self.swerve_table.getEntry("fs_target")
         self.as_actual = self.swerve_table.getEntry("as_actual")
-        self.as_target = self.swerve_table.getEntry("as_target")
+        # self.as_target = self.swerve_table.getEntry("as_target")
         self.fp_actual = self.swerve_table.getEntry("fp_actual")
-        self.fp_target = self.swerve_table.getEntry("fp_target")
+        # self.fp_target = self.swerve_table.getEntry("fp_target")
         self.ap_actual = self.swerve_table.getEntry("ap_actual")
-        self.ap_target = self.swerve_table.getEntry("ap_target")
+
+    # self.ap_target = self.swerve_table.getEntry("ap_target")
 
 
 class SwerveModule:

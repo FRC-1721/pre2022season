@@ -10,3 +10,6 @@ pyyaml = "*"
 
 [dev-packages]
 black = "*"
+
+[pipenv]
+allow_prereleases = true

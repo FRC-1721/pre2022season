@@ -27,4 +27,4 @@ class FlyByWire(commands2.CommandBase):
         self.addRequirements([self.drivetrain])
 
     def execute(self) -> None:
-        self.drivetrain.arcadeDrive(self.forward(), self.rotation(), self.strafe())
+        self.drivetrain.arcadeDrive(self.forward(), self.strafe(), self.rotation())

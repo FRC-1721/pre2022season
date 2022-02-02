@@ -12,6 +12,9 @@ from subsystems.drivetrain import Drivetrain
 # Constants
 from constants.constants import getConstants
 
+# Auto
+from commands.nullauto import Auto
+
 
 class RobotContainer:
     """
@@ -53,3 +56,4 @@ class RobotContainer:
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
+        self.chooser.setDefaultOption("Auto", self.Auto) 

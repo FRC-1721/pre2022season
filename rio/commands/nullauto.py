@@ -1,8 +1,29 @@
 import commands2
-from subsystems import drivetrain
+
+from commands.flybywire import FlyByWire
 
 
-class Auto(commands2.SequentialoCommandGroup):
-    def __init__(self):
+class NullAuto(commands2.SequentialCommandGroup):
+    def __init__(self, drivetrain) -> None:
+        """
+        Fill this out.
+        """
         super().__init__()
-        pass
+
+        # list of commands.
+        self.addCommands(
+            FlyByWire(
+                drivetrain,
+                lambda: self.getNum(0),
+                lambda: self.getNum(1),
+                lambda: self.getNum(0),
+            ),
+        )
+
+    def getNum(self, num):
+        """
+        Replace me later.
+        Typing weirdness.
+        """
+
+        return num

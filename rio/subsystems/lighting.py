@@ -26,8 +26,8 @@ class Lighting(SubsystemBase):
 
         # Import CANdle configuration
         CANdleConfig = CANdleConfiguration()
-        # CANdleConfig.configLEDType = LEDStripType.RGB
-        # CANdleConfig.brightnessScalar = self.constants["misc"]["CANdle"]["brightness"]
+        CANdleConfig.stripType = LEDStripType.RGB
+        CANdleConfig.brightnessScalar = self.constants["misc"]["CANdle"]["brightness"]
 
         # Write all settings
         logging.info(type(CANdleConfig))

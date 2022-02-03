@@ -3,6 +3,7 @@
 
 import logging
 
+from ctre import ErrorCode
 from ctre.led import CANdle, CANdleConfiguration, LEDStripType
 from commands2 import SubsystemBase
 from constants.constants import getConstants
@@ -25,8 +26,8 @@ class Lighting(SubsystemBase):
 
         # Import CANdle configuration
         CANdleConfig = CANdleConfiguration()
-        CANdleConfig.configLEDType = LEDStripType.RGB
-        CANdleConfig.BrightnessScalar = self.constants["misc"]["CANdle"]["brightness"]
+        # CANdleConfig.configLEDType = LEDStripType.RGB
+        # CANdleConfig.brightnessScalar = self.constants["misc"]["CANdle"]["brightness"]
 
         # Write all settings
         logging.info(type(CANdleConfig))
@@ -37,4 +38,5 @@ class Lighting(SubsystemBase):
     def periodic(self):
         candleError = self.CANdle.getLastError()  # Gets the last error from the CANdle
 
-        logging.error(f"Candle raised an error, code {candleError}")
+        if candleError != ErrorCode.OK:
+            logging.error(f"Candle raised an error, code {candleError}")

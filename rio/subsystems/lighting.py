@@ -4,7 +4,7 @@
 import logging
 
 from ctre import ErrorCode
-from ctre.led import CANdle, CANdleConfiguration, LEDStripType
+from ctre.led import CANdle, CANdleConfiguration, LEDStripType, SingleFadeAnimation
 
 from commands2 import SubsystemBase
 
@@ -47,10 +47,13 @@ class Lighting(SubsystemBase):
             logging.error(f"Candle raised an error, code {candleError}")
 
         # TODO: Change this
-        # match DriverStation.getAlliance():
-        #    case DriverStation.Alliance.kRed:
-        #        self.CANdle.setLEDs(255, 0, 0)
-        #    case DriverStation.Alliance.kBlue:
-        #        self.CANdle.setLEDs(0, 0, 255)
-        #    case DriverStation.Alliance.kInvalid:
-        #        self.CANdle.setLEDs(255, 255, 255)
+        match DriverStation.getAlliance():
+            case DriverStation.Alliance.kRed:
+                # Sets the LEDs to all red when the alliance is red.
+                self.CANdle.setLEDs(255, 0, 0)
+            case DriverStation.Alliance.kBlue:
+                # Sets the LEDs to all blue when the alliance is blue.
+                self.CANdle.setLEDs(0, 0, 255)
+            case DriverStation.Alliance.kInvalid:
+                # Sets the LEDs to a purple fade when the alliance is invalid/unknown.
+                self.CANdle.animate(SingleFadeAnimation(r=255, g=0, b=255, speed=1))

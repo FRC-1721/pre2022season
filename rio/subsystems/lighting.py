@@ -49,14 +49,17 @@ class Lighting(SubsystemBase):
         self.CANdle.animate(SingleFadeAnimation(r=255, g=0, b=255, speed=1))
 
     def periodic(self):
-        candleError = self.CANdle.getLastError()  # Gets the last error from the CANdle
-
-        if candleError != ErrorCode.OK:
-            logging.error(f"Candle raised an error, code {candleError}")
-
-        # Waiting to update this every 5 seconds
+        # Only continue once every 5 seconds.
         if self.backgroundTimer.hasPeriodPassed(5):
-            # TODO: Change this
+
+            candleError = (
+                self.CANdle.getLastError()
+            )  # Gets the last error from the CANdle
+
+            if candleError != ErrorCode.OK:
+                logging.error(f"Candle raised an error, code {candleError}")
+
+            # TODO: Make this more capable of reporting other robot information.
             match DriverStation.getAlliance():
                 case DriverStation.Alliance.kRed:
                     # Sets the LEDs to all red when the alliance is red.

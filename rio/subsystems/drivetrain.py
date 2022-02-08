@@ -1,8 +1,6 @@
 # FRC 1721
 # 2022
 
-import logging
-
 from wpimath import kinematics, geometry
 from commands2 import SubsystemBase
 from rev import CANSparkMax, CANSparkMaxLowLevel
@@ -66,13 +64,13 @@ class Drivetrain(SubsystemBase):
         )
 
         # Networktables/dashboard
-        self.fs_actual.setDouble(self.fs_module.getHeading())
+        self.fs_actual.setDouble(self.fs_module.getRealHeading())
         # self.fs_target.setDouble(self.fs_module.getHeading())
-        self.as_actual.setDouble(self.as_module.getHeading())
+        self.as_actual.setDouble(self.as_module.getRealHeading())
         # self.as_target.setDouble(self.as_module.getHeading())
-        self.fp_actual.setDouble(self.fp_module.getHeading())
+        self.fp_actual.setDouble(self.fp_module.getRealHeading())
         # self.fp_target.setDouble(self.fp_module.getHeading())
-        self.ap_actual.setDouble(self.ap_module.getHeading())
+        self.ap_actual.setDouble(self.ap_module.getRealHeading())
         # self.ap_target.setDouble(self.ap_module.getHeading())
 
     def arcadeDrive(self, fwd, srf, rot):
@@ -128,22 +126,30 @@ class SwerveModule:
         self.drive_motor = CANSparkMax(
             constants["drive_id"], CANSparkMaxLowLevel.MotorType.kBrushless
         )
-        self.steer_motor = CANSparkMax(
+        self.swerve_motor = CANSparkMax(
             constants["steer_id"], CANSparkMaxLowLevel.MotorType.kBrushless
         )
+
+        # Get encoders for both drive and steer motor
+        self.drive_motor_encoder = self.drive_motor.getEncoder()
+        self.swerve_motor_encoder = self.swerve_motor.getEncoder()
 
         # Construct the pose of this module
         self.module_pose = geometry.Translation2d(
             constants["pose_x"], constants["pose_y"]
         )
 
-        # Current state variables
+        # Initialize state variables
+        # Tells us if this module has been zeroed
         self.is_zeroed = False
-        self.state = kinematics.SwerveModuleState(
-            0, geometry.Rotation2d(0)
-        )  # This module state is default 0 speed, and 0 rotation
+        # This module state is default 0 speed, and 0 rotation
+        self.state = kinematics.SwerveModuleState(0, geometry.Rotation2d(0))
 
     def getTranslation(self):
+        """
+        Return the current translation/pose
+        of this module.
+        """
         return self.module_pose
 
     def setModuleState(self, newState):
@@ -161,12 +167,24 @@ class SwerveModule:
         Returns the current module state,
         useful for odom.
         """
+
+        # TODO: This should return the physical state, ie: from encoder readings
+        # ex: return kinematics.SwerveModuleState(0, geometry.Rotation2d(0))
         return self.state
 
-    def getHeading(self):
+    def getRealHeading(self):
         """
-        Returns the current heading of
-        this module
+        Returns the current real heading
+        of this module
+        """
+
+        # TODO: This should be constructed using sensor data, ie: encoders
+        return self.state.angle.radians()
+
+    def getTargetHeading(self):
+        """
+        Returns the target heading this
+        module wants to achieve.
         """
 
         return self.state.angle.radians()

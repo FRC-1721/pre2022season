@@ -1,10 +1,10 @@
-name: Error example
+name: WPIlib Simulator
 on: pull_request
 
 jobs:
   run_simulator:
     runs-on: ubuntu-latest
-    name: Test the wpilib simulator init
+    name: Run the WPIlib Simulator
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -25,7 +25,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
-          pipenv install --deploy --dev
+          cd rio && pipenv install --deploy --dev
 
       - name: Timeout the simulator
-        run: cd rio && timeout 20 pipenv run python robot.py sim --nogui || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+        run: |
+          cd rio && timeout 20 pipenv run python robot.py sim --nogui || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi

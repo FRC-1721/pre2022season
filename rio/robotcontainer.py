@@ -3,8 +3,12 @@ import wpilib
 import commands2
 import commands2.button
 
+from wpilib import SmartDashboard
+
+
 # Commands
 from commands.flybywire import FlyByWire
+from commands.rezero import ReZero
 
 # Subsystens
 from subsystems.drivetrain import Drivetrain
@@ -50,6 +54,11 @@ class RobotContainer:
                 lambda: self.driverController.getRawAxis(2),
                 lambda: self.driverController.getRawAxis(0),
             )
+        )
+
+        SmartDashboard.putData(
+            "Test",
+            ReZero(),
         )
 
     def configureButtonBindings(self):

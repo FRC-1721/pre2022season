@@ -19,8 +19,6 @@ class Drivetrain(SubsystemBase):
     def __init__(self):
         super().__init__()
 
-        madmax = self.drive_motor = CANSparkMax(0)
-
         # Get hardware constants
         self.constants = getConstants("robot_hardware")
 

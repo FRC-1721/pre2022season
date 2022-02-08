@@ -36,4 +36,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Action: {{ GITHUB_ACTION }} ran in project {{ EVENT_PAYLOAD.repository.full_name }}.'
+          args: 'Action failed! {{ EVENT_PAYLOAD.check_suite.url }} ran in project {{ EVENT_PAYLOAD.repository.full_name }}.'

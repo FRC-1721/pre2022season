@@ -1,5 +1,4 @@
-name: Make Docs
-
+name: Robot Manual
 on: push
 
 jobs:

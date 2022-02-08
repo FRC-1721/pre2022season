@@ -30,3 +30,10 @@ jobs:
       - name: Timeout the simulator
         run: |
           cd rio && timeout 20 pipenv run python robot.py sim --nogui || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+      
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Action: {{ GITHUB_ACTION }} ran in project {{ EVENT_PAYLOAD.repository.full_name }}.'

@@ -32,8 +32,9 @@ jobs:
           cd rio && timeout 20 pipenv run python robot.py sim --nogui || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
       
       - name: Discord notification
+        if: ${{ failure() }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Automatic check failed in {{ EVENT_PAYLOAD.pull_request.html_url }}!'
+          args: 'Automatic check failed in {{ EVENT_PAYLOAD.pull_request.html_url }} !'
